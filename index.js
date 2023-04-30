@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const CryptoJS = require("crypto-js");
-const User = require("./src/v1/models/user");
+
 const app = express();
 const PORT = 3000;
 require("dotenv").config();
+ 
+app.use(express.json());
+app.use("api/v1", require("./src/v1/routes/auth"));
 
 // Or:
 try {
@@ -25,16 +27,4 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
-
-app.post("/register", async (req, res) => {
-  // パスワードの暗号化
-  const password = req.body.password;
-
-  try {
-    req.body.password = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY)
-    const user = await User.create(req.body)
-  } catch {
-
-  }
 });
